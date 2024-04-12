@@ -8,6 +8,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const fs = require('fs');
 
+console.log(process.env.NODE_ENV);
+
 // Function to generate HtmlWebpackPlugin instances for each HTML file
 function generateHtmlPlugins(templateDir) {
   const templateFiles = fs.readdirSync(path.resolve(__dirname, templateDir));
@@ -24,7 +26,7 @@ function generateHtmlPlugins(templateDir) {
           `${templateDir}/${name}.${extension}`
         ),
         base:
-          process.env.NODE_ENV === 'development'
+          process.env.NODE_ENV !== 'production'
             ? '/'
             : '/reveal-multi-slides-template/',
         inject: true,
@@ -48,7 +50,7 @@ module.exports = {
       template: './index.html',
       inject: false,
       base:
-        process.env.NODE_ENV === 'development'
+        process.env.NODE_ENV !== 'production'
           ? '/'
           : '/reveal-multi-slides-template/',
     }),

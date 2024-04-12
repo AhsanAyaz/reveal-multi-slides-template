@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npm run extract && webpack serve",
-    "build": "npm run extract && webpack --mode production",
+    "build": "npm run extract && cross-env NODE_ENV=production webpack --mode production",
     "predeploy": "npm run build",
     "deploy": "gh-pages --dist ./dist",
     "extract": "node scripts/extractSlideData.js",
@@ -40,6 +40,7 @@
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^12.0.2",
     "core-js": "^3.12.1",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.1",
     "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.57.0",
