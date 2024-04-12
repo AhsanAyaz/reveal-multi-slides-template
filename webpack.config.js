@@ -2,13 +2,36 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const fs = require('fs');
+
+// Function to generate HtmlWebpackPlugin instances for each HTML file
+function generateHtmlPlugins(templateDir) {
+  const templateFiles = fs.readdirSync(path.resolve(__dirname, templateDir));
+  return templateFiles
+    .filter((fileName) => fileName.endsWith('html'))
+    .map((item) => {
+      const parts = item.split('.');
+      const name = parts[0];
+      const extension = parts[1];
+      return new HtmlWebpackPlugin({
+        filename: `${name}.html`,
+        template: path.resolve(
+          __dirname,
+          `${templateDir}/${name}.${extension}`
+        ),
+        inject: true,
+      });
+    });
+}
+
+const htmlPlugins = generateHtmlPlugins('./content');
 
 module.exports = {
-  entry: './js/index.js',
+  entry: './js/slides.js',
   output: {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
@@ -19,14 +42,20 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './index.html',
+      inject: false,
     }),
+    ...htmlPlugins,
     new MiniCssExtractPlugin({
-      filename: 'styles.[contenthash].css',
+      filename: 'styles/[name].[contenthash].css',
     }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'content', to: 'content' },
         { from: 'data', to: 'data' },
+        { from: 'main.js', to: 'main.js' },
+        { from: 'slides-markdown', to: 'slides-markdown' },
+        { from: 'profiles', to: 'profiles' },
+        { from: 'assets', to: 'assets' },
       ],
     }),
     new ESLintPlugin(),
@@ -36,15 +65,10 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
+        use: 'babel-loader',
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
@@ -53,7 +77,11 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(png|jpeg|jpg|gif|svg)$/i,
         type: 'asset/resource',
       },
     ],
@@ -65,7 +93,14 @@ module.exports = {
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
+      watch: true,
     },
+    watchFiles: [
+      'slides-markdown/**/*',
+      'content/**/*',
+      'css/**/*',
+      'profiles/*',
+    ],
     open: true,
     port: 8000,
     hot: true,
