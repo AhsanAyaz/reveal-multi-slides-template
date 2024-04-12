@@ -72,6 +72,7 @@ export default function (revealElement, options) {
     // Cached references to DOM elements
     dom = {},
     // Flags if the interaction event listeners are bound
+    // eslint-disable-next-line
     eventsAreBound = false,
     // The current slide transition state; idle or running
     transition = 'idle',
@@ -726,7 +727,7 @@ export default function (revealElement, options) {
 
     dom.overlay.querySelector('iframe').addEventListener(
       'load',
-      (event) => {
+      () => {
         dom.overlay.classList.add('loaded');
       },
       false
@@ -743,7 +744,7 @@ export default function (revealElement, options) {
 
     dom.overlay.querySelector('.external').addEventListener(
       'click',
-      (event) => {
+      () => {
         closeOverlay();
       },
       false
@@ -1496,7 +1497,7 @@ export default function (revealElement, options) {
    * Randomly shuffles all slides in the deck.
    */
   function shuffle(slides = getHorizontalSlides()) {
-    slides.forEach((slide, i) => {
+    slides.forEach((slide) => {
       // Insert the slide next to a randomly picked sibling slide
       // slide. This may cause the slide to insert before itself,
       // but that's not an issue.
@@ -2362,7 +2363,7 @@ export default function (revealElement, options) {
    *
    * @param {object} [event]
    */
-  function onUserInput(event) {
+  function onUserInput() {
     if (config.autoSlideStoppable) {
       pauseAutoSlide();
     }
@@ -2449,7 +2450,7 @@ export default function (revealElement, options) {
    *
    * @param {object} [event]
    */
-  function onWindowResize(event) {
+  function onWindowResize() {
     layout();
   }
 
@@ -2458,7 +2459,7 @@ export default function (revealElement, options) {
    *
    * @param {object} [event]
    */
-  function onPageVisibilityChange(event) {
+  function onPageVisibilityChange() {
     // If, after clicking a link or similar and we're coming back,
     // focus the document.body to ensure we can use keyboard shortcuts
     if (document.hidden === false && document.activeElement !== document.body) {
@@ -2510,7 +2511,7 @@ export default function (revealElement, options) {
    *
    * @param {object} [event]
    */
-  function onAutoSlidePlayerClick(event) {
+  function onAutoSlidePlayerClick() {
     // Replay
     if (isLastSlide() && config.loop === false) {
       slide(0, 0);

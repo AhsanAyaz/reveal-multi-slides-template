@@ -498,7 +498,7 @@ export default class AutoAnimate {
     let reserved = [];
 
     // Remove duplicate pairs
-    return pairs.filter((pair, index) => {
+    return pairs.filter((pair) => {
       if (reserved.indexOf(pair.to) === -1) {
         reserved.push(pair.to);
         return true;

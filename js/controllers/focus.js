@@ -21,7 +21,7 @@ export default class Focus {
   /**
    * Called when the reveal.js config is updated.
    */
-  configure(config, oldConfig) {
+  configure(config) {
     if (config.embedded) {
       this.blur();
     } else {
@@ -87,7 +87,7 @@ export default class Focus {
     this.Reveal.getRevealElement().classList.remove('focused');
   }
 
-  onRevealPointerDown(event) {
+  onRevealPointerDown() {
     this.focus();
   }
 

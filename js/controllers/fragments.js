@@ -1,4 +1,4 @@
-import { extend, queryAll } from '../utils/util.js';
+import { queryAll } from '../utils/util.js';
 
 /**
  * Handles sorting and navigation of slide fragments.
@@ -136,7 +136,7 @@ export default class Fragments {
   sortAll() {
     this.Reveal.getHorizontalSlides().forEach((horizontalSlide) => {
       let verticalSlides = queryAll(horizontalSlide, 'section');
-      verticalSlides.forEach((verticalSlide, y) => {
+      verticalSlides.forEach((verticalSlide) => {
         this.sort(verticalSlide.querySelectorAll('.fragment'));
       }, this);
 

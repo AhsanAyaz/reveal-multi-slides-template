@@ -59,7 +59,7 @@ export default class Controls {
   /**
    * Called when the reveal.js config is updated.
    */
-  configure(config, oldConfig) {
+  configure(config) {
     this.element.style.display = config.controls ? 'block' : 'none';
 
     this.element.setAttribute('data-controls-layout', config.controlsLayout);
