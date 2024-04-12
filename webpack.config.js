@@ -23,6 +23,10 @@ function generateHtmlPlugins(templateDir) {
           __dirname,
           `${templateDir}/${name}.${extension}`
         ),
+        base:
+          process.env.NODE_ENV === 'development'
+            ? '/'
+            : '/reveal-multi-slides-template/',
         inject: true,
       });
     });
@@ -43,6 +47,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
       inject: false,
+      base:
+        process.env.NODE_ENV === 'development'
+          ? '/'
+          : '/reveal-multi-slides-template/',
     }),
     ...htmlPlugins,
     new MiniCssExtractPlugin({

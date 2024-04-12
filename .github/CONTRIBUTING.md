@@ -1,10 +1,10 @@
 ## Contributing
 
-Please keep the [issue tracker](https://github.com/hakimel/reveal.js/issues) limited to **bug reports**.
+Please keep the [issue tracker](https://github.com/ahsanayaz/reveal-multi-slides-template/issues) limited to **bug reports**.
 
 ### General Questions and Support
 
-If you have questions about how to use reveal.js the best place to ask is in the [Discussions](https://github.com/hakimel/reveal.js/discussions). Anything that isn't a bug report should be posted as a dicussion instead.
+If you have questions about how to use reveal.js the best place to ask is in the [Discussions](https://github.com/ahsanayaz/reveal-multi-slides-template/discussions). Anything that isn't a bug report should be posted as a dicussion instead.
 
 ### Bug Reports
 
@@ -17,6 +17,3 @@ When reporting a bug make sure to include information about which browser and op
   - Tabs to indent
   - Single-quoted strings
 
-### Plugins
-
-Please do not submit plugins as pull requests. They should be maintained in their own separate repository. More information here: https://github.com/hakimel/reveal.js/wiki/Plugin-Guidelines
