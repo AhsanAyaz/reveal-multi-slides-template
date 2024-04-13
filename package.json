@@ -7,10 +7,10 @@
     "dev": "npm run extract && webpack serve",
     "build": "npm run extract && cross-env NODE_ENV=production webpack --mode production",
     "predeploy": "npm run build",
-    "deploy": "gh-pages --dist ./dist",
+    "deploy": "gh-pages --dist ./dist/reveal-multi-slides-template",
     "extract": "node scripts/extractSlideData.js",
     "lint": "eslint ./js/**/* --fix",
-    "serve:prod": "npm run build && npx http-server ./dist -c-1"
+    "serve:prod": "npm run build && npx http-server ./dist -c-1 -o /reveal-multi-slides-template/"
   },
   "author": {
     "name": "Muhammad Ahsan Ayaz",

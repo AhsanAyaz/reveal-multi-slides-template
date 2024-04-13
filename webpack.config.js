@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const fs = require('fs');
 
-console.log(process.env.NODE_ENV);
+const BASE_HREF = 'reveal-multi-slides-template';
 
 // Function to generate HtmlWebpackPlugin instances for each HTML file
 function generateHtmlPlugins(templateDir) {
@@ -20,16 +20,16 @@ function generateHtmlPlugins(templateDir) {
       const name = parts[0];
       const extension = parts[1];
       return new HtmlWebpackPlugin({
-        filename: `${name}.html`,
+        filename: `${
+          process.env.NODE_ENV === 'production' ? BASE_HREF + '/' : ''
+        }${name}.html`,
         template: path.resolve(
           __dirname,
           `${templateDir}/${name}.${extension}`
         ),
-        base:
-          process.env.NODE_ENV !== 'production'
-            ? '/'
-            : '/reveal-multi-slides-template/',
+        base: process.env.NODE_ENV !== 'production' ? '/' : `/${BASE_HREF}/`,
         inject: true,
+        minify: false,
       });
     });
 }
@@ -40,7 +40,10 @@ module.exports = {
   entry: './js/slides.js',
   output: {
     filename: 'bundle.[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(
+      __dirname,
+      process.env.NODE_ENV === 'production' ? `dist/${BASE_HREF}` : 'dist'
+    ),
   },
   mode: 'development', // Change to 'production' when ready to deploy
   devtool: 'source-map',
@@ -49,10 +52,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
       inject: false,
-      base:
-        process.env.NODE_ENV !== 'production'
-          ? '/'
-          : '/reveal-multi-slides-template/',
+      base: process.env.NODE_ENV !== 'production' ? '/' : `/${BASE_HREF}/`,
     }),
     ...htmlPlugins,
     new MiniCssExtractPlugin({
