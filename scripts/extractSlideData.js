@@ -13,18 +13,18 @@ const listFilesInDirectory = (directory, fileNames) => {
   });
 };
 
-const extractTitle = (path) => {
+const extractTitleFromMarkdown = (path) => {
   try {
     const data = fs.readFileSync(path, 'utf8');
-    const titleRegex = /<title>(.*?)<\/title>/;
-    const match = data.match(titleRegex);
-
-    if (match) {
-      const titleContent = match[1];
-      return titleContent;
-    } else {
-      return '';
+    const headingRegex = /^#{1,2}\s+(.*)/;
+    const lines = data.split('\n');
+    for (let line of lines) {
+      const match = line.match(headingRegex);
+      if (match) {
+        return match[1].trim(); // Extracts the first Markdown heading
+      }
     }
+    return ''; // Return an empty string if no heading is found
   } catch (err) {
     console.log(err.message);
     process.exit(1);
@@ -36,8 +36,7 @@ const extractSlideData = (folderName) => {
     const talksPath = path.resolve(folderName);
     const files = fs.readdirSync(talksPath);
 
-    const indexFilter = /index\.html$/;
-    const htmlFilter = /\.html$/;
+    const markdownFilter = /\.md$/;
     const folderFilter = /\./;
 
     let content = [];
@@ -47,28 +46,19 @@ const extractSlideData = (folderName) => {
         listFilesInDirectory(path.join(talksPath, file), fileNames);
 
         return fileNames.forEach((file) => {
-          if (indexFilter.test(file)) {
-            content.push(file.replace(talksPath, '').substring(1));
+          if (markdownFilter.test(file)) {
+            const title = extractTitleFromMarkdown(file);
+            content.push({
+              link: file.replace(talksPath, '').substring(1),
+              title,
+            });
           }
         });
       }
 
-      if (htmlFilter.test(file)) {
-        content.push(file);
-      }
-    });
-
-    content = content.map((link) => {
-      if (htmlFilter.test(link)) {
-        const title = extractTitle(path.join(talksPath, link));
-        return { link, title };
-      }
-
-      const filePath = path.join(talksPath, link, 'index.html');
-
-      if (fs.existsSync(filePath)) {
-        const title = extractTitle(filePath);
-        return { link, title };
+      if (markdownFilter.test(file)) {
+        const title = extractTitleFromMarkdown(path.join(talksPath, file));
+        content.push({ link: file, title });
       }
     });
 
@@ -93,4 +83,8 @@ const saveSlideData = () => {
 
 saveSlideData();
 
-module.exports = { extractTitle, extractSlideData, listFilesInDirectory };
+module.exports = {
+  extractTitleFromMarkdown,
+  extractSlideData,
+  listFilesInDirectory,
+};
